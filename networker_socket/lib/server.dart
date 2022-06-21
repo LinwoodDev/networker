@@ -19,16 +19,16 @@ class SocketServer extends NetworkingServer {
   FutureOr<void> start() async {
     _server = await HttpServer.bind(InternetAddress.loopbackIPv4, port);
     _server?.listen((request) {
+      final identifier = request.session.id;
       WebSocketTransformer.upgrade(request).then((ws) {
-        _clients.add(SocketServerConnection(this, ws));
+        _clients.add(SocketServerConnection(this, ws, identifier));
         ws.listen((data) {
           final message = json.decode(data);
           if (message is! Map) {
             ws.close(WebSocketStatus.protocolError);
             return;
           }
-          final serviceName = message['service'];
-          getService(serviceName)?.emitEvent(message['event'], message['data']);
+          handleData(identifier, message);
         });
       });
     });
@@ -46,16 +46,15 @@ class SocketServer extends NetworkingServer {
   }
 
   @override
-  List<NetworkingClientConnection> get clients => List.unmodifiable(_clients);
+  List<NetworkingServerConnection> get clients => List.unmodifiable(_clients);
 }
 
-class SocketServerConnection extends NetworkingClientConnection {
+class SocketServerConnection extends NetworkingServerConnection {
   final WebSocket _socket;
-
-  SocketServerConnection(super.server, this._socket);
-
   @override
-  String get identifier => _socket.hashCode.toString();
+  final String identifier;
+
+  SocketServerConnection(super.server, this._socket, this.identifier);
 
   @override
   bool isConnected() => _socket.readyState == WebSocket.open;

@@ -17,7 +17,7 @@ abstract class NetworkingConnection {
 
   FutureOr<void> stop();
 
-  bool isConnected();
+  FutureOr<bool> isConnected();
 
   FutureOr<bool> _handleData(NetworkingConnection connection, dynamic data) {
     if (data is! Map) {
@@ -73,15 +73,15 @@ abstract class NetworkingConnection {
 abstract class NetworkingServer extends NetworkingConnection {
   NetworkingServer();
 
-  List<NetworkingClientConnection> get clients;
+  List<NetworkingServerConnection> get clients;
 
-  NetworkingClientConnection? getClient(String identifier) =>
+  NetworkingServerConnection? getClient(String identifier) =>
       clients.firstWhereOrNull((client) => client.identifier == identifier);
 
   @override
   Set<String> get rooms => clients.expand((client) => client.rooms).toSet();
 
-  List<NetworkingClientConnection> getClientsInRoom(String room) =>
+  List<NetworkingServerConnection> getClientsInRoom(String room) =>
       clients.where((client) => client.rooms.contains(room)).toList();
 
   @override
@@ -207,11 +207,11 @@ abstract class NetworkingClient extends NetworkingIdentity {
       send(service: 'room', event: 'leave', data: room);
 }
 
-abstract class NetworkingClientConnection extends NetworkingIdentity {
+abstract class NetworkingServerConnection extends NetworkingIdentity {
   final Set<String> _rooms = {};
   final NetworkingServer server;
 
-  NetworkingClientConnection(this.server, {bool registerRoomService = true}) {
+  NetworkingServerConnection(this.server, {bool registerRoomService = true}) {
     if (registerRoomService) _registerRoomService();
   }
 
