@@ -33,9 +33,9 @@ class BleServer extends NetworkingServer {
 
   void _handleConnection(String deviceId, BlueConnectionState state) {
     if (state == BlueConnectionState.connected) {
-      final connection = BleServerConnection(this, appService, characteristic, deviceId);
+      final connection =
+          BleServerConnection(this, appService, characteristic, deviceId);
       clients.add(connection);
-      
     } else {
       clients.removeWhere((c) => c.identifier == deviceId);
     }
@@ -44,7 +44,8 @@ class BleServer extends NetworkingServer {
 
 class BleServerConnection extends NetworkingServerConnection {
   final String appService, characteristic;
-  BleServerConnection(super.server, this.appService, this.characteristic, this.identifier);
+  BleServerConnection(
+      super.server, this.appService, this.characteristic, this.identifier);
 
   @override
   Future<bool> isConnected() => QuickBlue.isBluetoothAvailable();
@@ -52,7 +53,12 @@ class BleServerConnection extends NetworkingServerConnection {
   @override
   FutureOr<void> send(
       {required String service, required String event, required String data}) {
-        QuickBlue.writeValue(identifier, appService, characteristic, Uint8List.fromList(utf8.encode(data)), BleOutputProperty.withoutResponse)
+    QuickBlue.writeValue(
+        identifier,
+        appService,
+        characteristic,
+        Uint8List.fromList(utf8.encode(data)),
+        BleOutputProperty.withoutResponse);
   }
 
   @override
