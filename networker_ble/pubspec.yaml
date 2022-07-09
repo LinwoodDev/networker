@@ -10,7 +10,7 @@ environment:
 dependencies:
   networker:
     path: ../networker
-  quick_blue: ^0.4.1+1
+  quick_blue: ^0.5.0-dev.2
 dev_dependencies:
   lints: ^2.0.0
-  test: ^1.21.3
+  test: ^1.21.4
