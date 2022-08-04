@@ -10,7 +10,13 @@ environment:
 dependencies:
   networker:
     path: ../networker
-  quick_blue: ^0.5.0-dev.2
+  quick_blue:
+    git:
+      url: https://github.com/woodemi/quick.flutter
+      ref: b6954f9acae12da069092dffec4f14baaae2bddc
+      path: packages/quick_blue
+dependency_overrides:
+  bluez: ^0.8.0
 dev_dependencies:
   lints: ^2.0.0
   test: ^1.21.4
