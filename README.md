@@ -1,3 +1,6 @@
+**This repo was moved to the dart_pkgs monorepo.**
+**Click [here](https://github.com/LinwoodDev/dart_pkgs/tree/main/packages/networker) to navigate there**
+
 # Networker
 
 > Networking library for dart
